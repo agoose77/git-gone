@@ -59,9 +59,9 @@ def read_changes():
         try:
             with local.cwd(path):
                 if has_uncommitted_changes():
-                    should_commit = yes_no_response(f"{path} has uncommitted changes, do you want to committed them?")
+                    should_commit = yes_no_response(f"{path} has uncommitted changes, do you want to commit them?")
                     if should_commit:
-                        message = input("Enter commit message:")
+                        message = input("Enter commit message: ")
                         cmd.git("commit", "-am", message)
 
                 if count_unpushed_commits():
