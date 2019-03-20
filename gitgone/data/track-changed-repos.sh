@@ -20,3 +20,6 @@ track_changed_git_repos()
 chpwd() {
 	(track_changed_git_repos >/dev/null 2>&1 &)
 }
+
+
+alias leave="gitgone changes && shutdown -c now"
