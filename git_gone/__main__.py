@@ -6,7 +6,8 @@ from .read_changes import read_changes
 
 def main():
     parser = ArgumentParser()
-    subparsers = parser.add_subparsers(required=True, dest="command")
+    subparsers = parser.add_subparsers(dest="command")
+    subparsers.required = True
 
     install_parser = subparsers.add_parser("install")
     install_parser.set_defaults(handler=install)
