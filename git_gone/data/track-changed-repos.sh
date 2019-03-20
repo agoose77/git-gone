@@ -22,4 +22,4 @@ chpwd() {
 }
 
 
-alias leave="git-gone changes && shutdown -c now"
+alias leave="git-gone changes && shutdown now"
