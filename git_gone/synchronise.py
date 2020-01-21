@@ -11,22 +11,12 @@ GIT_GONE_BRANCH_NAME = "git-gone"
 GIT_GONE_STASH_MESSAGE = "git-gone stash commit"
 
 
-def count_unpushed_commits() -> int:
+def has_unpushed_commits() -> int:
     """Determine the number of unpushed commits for the cwd.
 
     :return:
     """
-    branch_ref = cmd.git("symbolic-ref", "-q", "HEAD").strip()
-    if not branch_ref:
-        return False
-
-    branch_origin = cmd.git("for-each-ref", "--format='%(upstream:short)'", branch_ref).strip().replace("'", '')
-    if not branch_origin:
-        return False
-
-    assert branch_ref.startswith("refs/heads/")
-    branch = branch_ref[len("refs/heads/"):]
-    return int(cmd.git("rev-list", f"{branch_origin}..{branch}", "--count").strip())
+    return cmd.git("log", "@{u}..", "-q")
 
 
 def count_modified_files() -> int:
@@ -111,24 +101,21 @@ def synchronise_local_changes(interactive: bool):
 def main(args):
     paths = {pth for p in MODIFIED_PATH.read_text().splitlines() if (pth := pathlib.Path(p)).exists()}
     handled_paths = set()
+
     try:
         for path in paths:
             with local.cwd(path):
                 try:
-                    n_commits = count_unpushed_commits()
-                    n_modified = count_modified_files()
-
-                    if not (n_commits or n_modified):
-                        continue
-
-                    if args.yes or yes_no_response(
-                            f"{path} has local changes which do not exist on the remote, do you want to push them?"
-                    ):
-                        synchronise_local_changes(interactive=not args.yes)
+                    if has_unpushed_commits() or count_modified_files():
+                        if args.yes or yes_no_response(
+                                f"{path} has local changes which do not exist on the remote, do you want to push them?"
+                        ):
+                            synchronise_local_changes(interactive=not args.yes)
 
                 except ProcessExecutionError:
                     traceback.print_exc()
                     continue
+
             handled_paths.add(path)
     finally:
         # Clear modified file in case of errors
