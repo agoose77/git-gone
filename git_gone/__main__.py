@@ -1,25 +1,26 @@
 from argparse import ArgumentParser
 
-from .install import install, uninstall
-from .read_changes import read_changes
+from . import source
+from . import synchronise
 
 
-def main():
+def add_handler(subparsers, module):
+    program, module_name = module.__name__.split('.', 1)
+    parser = subparsers.add_parser(module_name)
+    module.configure(parser)
+    parser.set_defaults(handler=module.main)
+
+
+def main(argv=None):
     parser = ArgumentParser()
     subparsers = parser.add_subparsers(dest="command")
     subparsers.required = True
 
-    install_parser = subparsers.add_parser("install")
-    install_parser.set_defaults(handler=install)
+    add_handler(subparsers, source)
+    add_handler(subparsers, synchronise)
 
-    uninstall_parser = subparsers.add_parser("uninstall")
-    uninstall_parser.set_defaults(handler=uninstall)
-
-    changes_parser = subparsers.add_parser("changes")
-    changes_parser.set_defaults(handler=read_changes)
-
-    args = parser.parse_args()
-    args.handler()
+    args = parser.parse_args(argv)
+    args.handler(args)
 
 
 if __name__ == "__main__":
