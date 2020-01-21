@@ -12,7 +12,7 @@ GIT_GONE_STASH_MESSAGE = "git-gone stash commit"
 
 
 def has_unpushed_commits() -> int:
-    """Determine the number of unpushed commits for the cwd.
+    """Determine if there are any unpushed commits for the cwd.
 
     :return:
     """
