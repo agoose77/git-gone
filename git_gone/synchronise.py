@@ -105,7 +105,8 @@ def synchronise_local_changes(interactive: bool = False):
 
 
 def main(args):
-    paths = {pth for pth in (pathlib.Path(p) for p in MODIFIED_PATH.read_text().splitlines()) if pth.exists()}
+    paths = {pth for pth in (pathlib.Path(p) for p in MODIFIED_PATH.read_text().splitlines()) if
+             pth.exists() and not (pth / ".git-gone-ignore").exists()}
     handled_paths = set()
 
     try:
