@@ -56,7 +56,13 @@ def configure(parser):
     parser.add_argument("--yes", "-y", action='store_true')
 
 
-def synchronise_local_changes(interactive: bool):
+def synchronise_local_changes(interactive: bool = False):
+    """Synchronise local changes (if any) with remote, in special branch.
+    If any errors occur during this process, we restore save the stash and print a detailed message.
+    
+    :param interactive: whether to request user confirmation
+    :return: 
+    """
     branch_name = get_current_branch()
     remote_name = get_branch_remote(branch_name)
 
