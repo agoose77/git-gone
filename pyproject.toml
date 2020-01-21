@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "git-gone"
-version = "2.1.1"
+version = "2.2.1"
 description = "A simple tool to track visited Git repositories, and check them for unpushed/committed changes"
 authors = ["Angus Hollands <goosey15@gmail.com>"]
 license = "MIT"
