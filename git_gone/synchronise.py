@@ -105,7 +105,7 @@ def synchronise_local_changes(interactive: bool = False):
 
 
 def main(args):
-    paths = {pth for p in MODIFIED_PATH.read_text().splitlines() if (pth := pathlib.Path(p)).exists()}
+    paths = {pth for pth in (pathlib.Path(p) for p in MODIFIED_PATH.read_text().splitlines()) if pth.exists()}
     handled_paths = set()
 
     try:
