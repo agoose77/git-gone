@@ -111,12 +111,16 @@ def main(args):
 
     try:
         for path in paths:
-
             with local.cwd(path):
+                git_root_dir = cmd.git("rev-parse", "--show-toplevel").strip()
+                if git_root_dir in handled_paths:
+                    continue
+
                 try:
                     if has_unpushed_commits() or count_modified_files():
                         if args.yes or yes_no_response(
-                                f"{path} has local changes which do not exist on the remote, do you want to push them?"
+                                f"{git_root_dir} has local changes which do not exist "
+                                f"on the remote, do you want to push them?"
                         ):
                             synchronise_local_changes(interactive=not args.yes)
 
@@ -124,7 +128,7 @@ def main(args):
                     traceback.print_exc()
                     continue
 
-                handled_paths.add(path)
+                handled_paths.add(git_root_dir)
     finally:
         # Clear modified file in case of errors
         MODIFIED_PATH.write_text('\n'.join(str(p) for p in (paths - handled_paths)))
