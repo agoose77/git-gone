@@ -3,8 +3,8 @@ import pathlib
 
 SCRIPT_SHEBANG = "#!/usr/bin/env bash"
 SCRIPT_BODY = """# Create tracker file if it doesn't exist
-if ! [[ -r $file ]]; then
-	touch $file;
+if ! [[ -r "$file" ]]; then
+	touch "$file";
 fi;
 
 track_changed_git_repos()
